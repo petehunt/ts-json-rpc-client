@@ -1,13 +1,12 @@
 import invariant from "invariant";
-import { RpcMethods } from "ts-json-rpc-server";
-import { Request } from "express";
+import { Request, RpcMethods } from "ts-json-rpc-server";
 
 export type RpcClient<T extends RpcMethods> = {
   [K in keyof T]: T[K] extends (req: Request, ...args: infer A) => infer R
-    ? (R extends Promise<infer I>
-        ? (...args: A) => R
-        : (...args: A) => Promise<R>)
-    : never
+    ? R extends Promise<infer I>
+      ? (...args: A) => R
+      : (...args: A) => Promise<R>
+    : never;
 };
 
 // TODO: support batch requests in both the client and the server
