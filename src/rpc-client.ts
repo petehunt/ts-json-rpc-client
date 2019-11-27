@@ -39,7 +39,7 @@ export default function createRpcClient<T extends RpcMethods>(
           invariant(responseJson.jsonrpc === "2.0", "invalid jsonrpc version");
           invariant(responseJson.id === id, "invalid response id");
           if (responseJson.error) {
-            throw new Error(responseJson.message);
+            throw new Error(responseJson.error.message);
           }
           return responseJson.result;
         };

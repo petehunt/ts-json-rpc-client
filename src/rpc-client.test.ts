@@ -10,6 +10,9 @@ test("integration", async t => {
     },
     async goodbye() {
       return "goodbye";
+    },
+    async err() {
+      throw new Error("this was an error");
     }
   };
   const server = await runDefaultServer(methods, 2288);
@@ -21,6 +24,13 @@ test("integration", async t => {
   const rv = await client.hello("pete");
   t.equal(rv, "hello, pete!");
   t.equal(await client.goodbye(), "goodbye");
+
+  try {
+    await client.err();
+    t.fail();
+  } catch (e) {
+    t.equal(e.message, "Error: this was an error");
+  }
 
   server.close();
 });
